@@ -34,10 +34,12 @@ class NewVisitorTest(unittest.TestCase):
         # the user hits enter and now the page updates and lists this as an item on the to-do list
         inputBox.send_keys(Keys.ENTER)
         time.sleep(1)
+
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
         self.assertTrue(
-            any(row.text == '1: Apply for Neuralink & Google internship' for row in rows)
+            any(row.text == '1: Apply for Neuralink & Google internship' for row in rows),
+            "New to do item did not appear in table"
         )
         # the text box persists and asks user to enter another item
         self.fail('Finish the test!')

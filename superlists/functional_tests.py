@@ -11,9 +11,14 @@ class NewVisitorTest(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
+    def check_for_row_in_list_table(self, row_text):
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(row_text, [row.text for row in rows])
+
     # functional test == end to end test == Acceptance test
     # writing the user story:
-    def test_can_start_a_list_and_end_it_later(self):
+    def test_can_start_a_list_and_get_it_later(self):
 
         # our user decides to check out our new online to do app
         self.browser.get('http://localhost:8000')
@@ -35,10 +40,8 @@ class NewVisitorTest(unittest.TestCase):
         inputBox.send_keys(Keys.ENTER)
         time.sleep(2)
 
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn(
-            '1: Apply for Neuralink & Google internship', [row.text for row in rows])
+        self.check_for_row_in_list_table(
+            '1: Apply for Neuralink & Google internship')
 
         # the text box persists and asks user to enter another item
         inputbox = self.browser.find_element_by_id('id_new_item')
@@ -47,14 +50,12 @@ class NewVisitorTest(unittest.TestCase):
         time.sleep(1)
 
         # after user hits enter page reloads again and now shows both items on the list
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('1: Apply for Neuralink & Google internship', [
-                      row.text for row in rows])
-        self.assertIn(
-            '2: Use peacock feathers to make a fly',
-            [row.text for row in rows]
-        )
+        self.check_for_row_in_list_table(
+            '1: Apply for Neuralink & Google internship')
+
+        self.check_for_row_in_list_table(
+            '2: Use peacock feathers to make a fly')
+
         # user sees that site has generated a unique URL alongside some explanatory text to show data persistence
         self.fail('Finish the test!')
 

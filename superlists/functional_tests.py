@@ -1,4 +1,6 @@
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import time
 import unittest
 
 
@@ -18,15 +20,27 @@ class NewVisitorTest(unittest.TestCase):
 
         # she observes the 'to-do' in the title
         self.assertIn('To-Do', self.browser.title)
-        self.fail('Finish the test!')
 
         # the UI invites the user to enter a to-do item upon site arrival
+        inputBox = self.browser.find_element_by_id('id_new_item')
+        self.assertEqual(
+            inputBox.get_attribute('placeholder'),
+            'Enter a to-do item'
+        )
 
-        # the user types in 'apply for Neuralink & Google internship' into a text input box
+        # the user types in 'Apply for Neuralink & Google internship' into a text input box
+        inputBox.send_keys('Apply for Neuralink & Google internship')
 
         # the user hits enter and now the page updates and lists this as an item on the to-do list
-
+        inputBox.send_keys(Keys.ENTER)
+        time.sleep(1)
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertTrue(
+            any(row.text == '1: Apply for Neuralink & Google internship' for row in rows)
+        )
         # the text box persists and asks user to enter another item
+        self.fail('Finish the test!')
 
         # after user hits enter page reloads again and now shows both items on the list
 

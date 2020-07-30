@@ -1,2 +1,2 @@
 # TDD
-Test driven development best practices 
+Test driven & agile development best practices 
